@@ -75,8 +75,11 @@ def select_tag(file_str):
        #获取所有的菜品
         target_mune1=soup.select('section[style="text-align: justify;box-sizing: border-box;"]>p[style="white-space: normal;box-sizing: border-box;"]')
         target_mune2 = soup.select('section[style="text-align: center;box-sizing: border-box;"]>p[style="text-align: left;box-sizing: border-box;"]')
-
+        # target_mune3=soup.select('section[tyle="text-align: justify; box-sizing: border-box; visibility: visible;" powered-by="xiumi.us"]>p[style="white-space: normal;margin: 0px;padding: 0px;box-sizing: border-box;"]')
+        # print(target_mune3)
         index1=[]
+
+
         for item in target_mune1:
             if ( '。')in item.text:
                 index1.append(target_mune1.index(item))
@@ -86,6 +89,7 @@ def select_tag(file_str):
 
         temp_list1=[]
         target_mune1.extend(target_mune2)
+        # target_mune1.extend(target_mune3)
         for item in target_mune1:
             temp_list1.append(item.text)
 
@@ -143,17 +147,16 @@ def change(pre_datalist):
                 break
             else:
                 for key_item,value_item in value.items():
-                    for str_item in value_item.split('、'):
+                    temp_value_item=re.split('、|，',value_item)
+                    for blank in temp_value_item:
+                        if blank=='':
+                            temp_value_item.remove(blank)
+                    for str_item in temp_value_item:
                         item = []
                         item.append(day['时间'].replace('.','-'))
-                        item.append(day['食堂'][:6])
+                        item.append(day['食堂'][:2]+key[:6])
                         item.append(str_item)
-                        new_datalist.append(item)
-                    for str_item in value_item.split('，'):
-                        item = []
-                        item.append(day['时间'])
-                        item.append(day['食堂'][:6])
-                        item.append(str_item)
+                        item.append(key_item)
                         new_datalist.append(item)
     return new_datalist
 
