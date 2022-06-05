@@ -49,10 +49,12 @@ def select_tag(file_str):
             target_dict[item.text]={}
 
         #获取每一层的早、中、晚餐tag
-        menu_tag=soup.select('span[style="font-size: 24px;box-sizing: border-box;"]')
+        menu_tag1=soup.select('span[style="font-size: 24px; box-sizing: border-box; visibility: visible;"]')
+        menu_tag2 = soup.select('span[style="font-size: 24px;box-sizing: border-box;"]')
+        menu_tag1.extend(menu_tag2)
         tem_list=[]
         tem_dict = {}
-        for item in menu_tag:
+        for item in menu_tag1:
             if '日菜品'in item.text:
                 continue
             elif '晚餐' in item.text:
@@ -73,13 +75,13 @@ def select_tag(file_str):
             target_dict[key]=tem_list[cout]
             cout+=1
        #获取所有的菜品
-        target_mune1=soup.select('section[style="text-align: justify;box-sizing: border-box;"]>p[style="white-space: normal;box-sizing: border-box;"]')
-        target_mune2 = soup.select('section[style="text-align: center;box-sizing: border-box;"]>p[style="text-align: left;box-sizing: border-box;"]')
-        # target_mune3=soup.select('section[tyle="text-align: justify; box-sizing: border-box; visibility: visible;" powered-by="xiumi.us"]>p[style="white-space: normal;margin: 0px;padding: 0px;box-sizing: border-box;"]')
-        # print(target_mune3)
+        target_mune1=soup.select('section[style="text-align: justify;box-sizing: border-box;"]>p[style="white-space: normal;margin: 0px;padding: 0px;box-sizing: border-box;"]')
+        target_mune2 = soup.select('section[style="text-align: justify;box-sizing: border-box;"]>p[style="white-space: normal;box-sizing: border-box;"]')
+        target_mune3=soup.select('section[style="text-align: justify; box-sizing: border-box; visibility: visible;"]>p[style="white-space: normal;margin: 0px;padding: 0px;box-sizing: border-box;"]')
+        target_mune1.extend(target_mune2)
+        target_mune1.extend(target_mune3)
+
         index1=[]
-
-
         for item in target_mune1:
             if ( '。')in item.text:
                 index1.append(target_mune1.index(item))
@@ -88,8 +90,6 @@ def select_tag(file_str):
             target_mune1.pop(i)
 
         temp_list1=[]
-        target_mune1.extend(target_mune2)
-        # target_mune1.extend(target_mune3)
         for item in target_mune1:
             temp_list1.append(item.text)
 
@@ -170,6 +170,7 @@ if __name__=='__main__':
     #循环调用get_data()来抓取每一天的菜单
     get_data(url_list)
     #数据整理
+    # print(total_datalist)
     new_total_datalist=change(total_datalist)
     #打印最终的总数据列表
     print(new_total_datalist)
